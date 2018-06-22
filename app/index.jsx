@@ -14,4 +14,4 @@ window.tobeCalledfromLoginActivity = tobeCalledfromLoginActivity;
 
 console.log("run here..");
 
-//tobeCalledfromLoginActivity("S1390tempsessiontoken1528209776078");
+// tobeCalledfromLoginActivity("S1390tempsessiontoken1528209776078");

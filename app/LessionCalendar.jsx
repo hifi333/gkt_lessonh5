@@ -236,7 +236,8 @@ const LessionCalendar = React.createClass({
             // 今天样式
             if (current_year == select_year && current_month == select_month && current_day == (i + 1)) {
                 currentClassName = 'item-current';
-                currentText = '今天';
+                // currentText = '今天';
+                currentText = i;
             } else {
                 currentText = i + 1;
 

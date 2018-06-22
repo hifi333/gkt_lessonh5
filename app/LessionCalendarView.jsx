@@ -5,21 +5,60 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import LessionCalendar from './LessionCalendar.jsx';
 import SamHttpClient from "./SamHttpClient.js"
+import H from './CanlendarUtilH.jsx';
 
 
 const LessionCalendarView = React.createClass({
 
+
+    componentDidMount() {
+
+        this.joinClassroomcallback = this.joinClassroomcallback.bind(this);
+
+        this.loadLessonTablecallback = this.loadLessonTablecallback.bind(this);
+        let {loginSessionToken} = this.props;
+        SamHttpClient.loadLessonTable(loginSessionToken,this.loadLessonTablecallback);
+
+    },
+
     loadLessonTablecallback(result, status){
 
-        let back = JSON.parse(result);
+        let back = result; //JSON.parse(result);
         if(back.session)  //正常session
         {
            console.log("loadlessontable result:" + result);
+
+            let currentyear = H.getFullYear();
+            let currentmonth = H.getMonth()+1;
+            console.log(currentyear);
+            console.log(currentmonth);
+            // this.settags(currentyear,currentmonth);    
+    
+            let newtags =[];
+            if(back.data){
+                back.data.map(function (onelessoninfo,index) {
+    
+                    let year1 = onelessoninfo.begintime.substring(0,4); 
+                    let month1 = onelessoninfo.begintime.substring(5,7); //2018-09-12
+                    let day1 = onelessoninfo.begintime.substring(8,10); //2018-09-12
+    
+                    if( parseInt(year1,10) == currentyear && parseInt(month1,10) == currentmonth)
+                    newtags.push(parseInt(day1,10));
+                    
+                });
+            }
+
             this.setState(
                 {
-                    lessonlistFromServer: back.data
+                    lessonlistFromServer: back.data,
+                    tags: newtags
                 }
             );
+
+
+            
+   
+
         }
     },
 
@@ -30,38 +69,12 @@ const LessionCalendarView = React.createClass({
      */
     getInitialState() {
 
-        this.joinClassroomcallback = this.joinClassroomcallback.bind(this);
-
-        this.loadLessonTablecallback = this.loadLessonTablecallback.bind(this);
-        let {loginSessionToken} = this.props;
-        SamHttpClient.loadLessonTable(loginSessionToken,this.loadLessonTablecallback);
-
-
         return {
-            tags : [5, 21]
+            tags : []
         }
     },
 
-    /**
-     * 选择日期
-     * @param year
-     * @param month
-     * @param day
-     */
-    selectDate(year, month, day) {
-        console.log("选择时间为：" + year + '年' + month + '月' + day + '日' );
-        let month1 =month;
-        if(month<10) month1 = "0" + month;
-
-        let day1 = day;
-        if(day<10) day1 = "0" + day;
-
-        let aa = year + "-" + month1 + "-" + day1;
-        this.setState(
-            {
-                selectedDate: aa
-            });
-    },
+    
 
     
     onClickShangKe(lessonid,e){
@@ -76,49 +89,106 @@ const LessionCalendarView = React.createClass({
     joinClassroomcallback(result,status){
 
 
-        let back = JSON.parse(result);
+        let back = result; //JSON.parse(result);
 
         console.log("joinclass back:"+ result);
         if(back.session)  //正常session
         {
+
+         if (/(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent)) {
+
+            try {
+                let para = {
+                    eclassroom: back.eclassroom,
+                    workmodel: back.workmodel
+                };
+
+                window.webkit.messageHandlers.joinRoom.postMessage(para);
+                console.log("window.webkit.messageHandlers.joinRoom: done");
+
+             } catch (e){ 
+                 console.log("window.webkit.messageHandlers.joinRoom:  error ");  
+                }
+         }else{
+
             skillroom.joinRoom(back.eclassroom,back.workmodel);
+            console.log("skillroom.joinRoom: done");
+
+         }
+        
+        
         }
 
     },
 
 
+    onSelectDate(year, month, day) {
+        let month1 =month;
+        if(month<10) month1 = "0" + month;
 
-    previousMonth(year, month) {
+        let day1 = day;
+        if(day<10) day1 = "0" + day;
+
+        let aa = year + "-" + month1 + "-" + day1;
+        this.setState(
+            {
+                selectedDate: aa
+            });
+    },
+
+    onPreviousMonth(year, month) {
         console.log("当前日期为：" + year + '年' + month + '月');
-        this.setState({tags : [7, 11]});
+        this.settags(year,month);
+
     },
 
     
-    nextMonth(year, month) {
+    onNextMonth(year, month) {
         console.log("当前日期为：" + year + '年' + month + '月');
-        this.setState({tags : [8, 23]});
+  
+        this.settags(year,month);
+
     },
 
+    settags(year,month){
+
+        let newtags =[];
+        // this.setState({tags : [8, 23]});
+
+        if(this.state.lessonlistFromServer){
+            this.state.lessonlistFromServer.map(function (onelessoninfo,index) {
+
+                let year1 = onelessoninfo.begintime.substring(0,4); 
+                let month1 = onelessoninfo.begintime.substring(5,7); //2018-09-12
+                let day1 = onelessoninfo.begintime.substring(8,10); //2018-09-12
+
+                if( parseInt(year1,10) == year && parseInt(month1,10) == month)
+                newtags.push(parseInt(day1,10));
+                
+            });
+            this.setState({tags : newtags});
+    }
+    },
     
     render() {
 
         let lessonlistFromServer = this.state.lessonlistFromServer;
 
-        let selectDate = this.state.selectedDate;
+        let youselectDate = this.state.selectedDate;
 
         let self = this;
 
-        console.log("you selected data:" + selectDate);
+        console.log("you selected data:" + youselectDate);
 
         return (
             <div className="lessionviewbody">  
                 <LessionCalendar
-                    onSelectDate={this.selectDate}
-                    onPreviousMonth={this.previousMonth}
-                    onNextMonth={this.nextMonth}
-                    year="2018"
-                    month="6"
-                    day="3"
+                    onSelectDate={this.onSelectDate}
+                    onPreviousMonth={this.onPreviousMonth}
+                    onNextMonth={this.onNextMonth}
+                    // year="2018"
+                    // month="7"
+                    // day="3"
                     tags={this.state.tags} />
 
                 <div className="lessionlistoneday">
@@ -128,8 +198,7 @@ const LessionCalendarView = React.createClass({
 
                            // if(onelessoninfo.begintime.startwith(selectDate))
                            let dd = onelessoninfo.begintime.substring(0,10);
-                           console.log("dd"+ dd + " seleced:" + selectDate );
-                           if(dd == selectDate)
+                           if(dd == youselectDate)
                             {
                                 let displaylessiontime = onelessoninfo.begintime.substring(11) + " ~ " 
                                 + onelessoninfo.endtime.substring(11);

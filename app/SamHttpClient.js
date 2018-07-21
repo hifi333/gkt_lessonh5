@@ -25,12 +25,13 @@ class SamHttpClient {
         let serverip = this.getServerIP();
 
         let meta={
+	token:loginSessionToken
         };
 
         $.ajax(
             {
                 type:'POST',
-                url : 'http://122.152.210.96/loadlessontable?token=' + loginSessionToken,
+                url : 'http://122.152.210.96/loadlessontable',
                 contentType: "application/json",
                 data: JSON.stringify(meta),  //还是POST String
                 success  :callback,
@@ -52,14 +53,15 @@ class SamHttpClient {
         let serverip = this.getServerIP();
 
         let meta={
-            targetClassroom: targetClassroom,
-            action: action
+	    token:loginSessionToken,
+            roomid: targetClassroom,
+            roomaction: action
         };
 
         $.ajax(
             {
                 type:'POST',
-                url : 'http://122.152.210.96/joinclassroom?token=' + loginSessionToken,
+                url : 'http://122.152.210.96/joinclassroom',
                 contentType: "application/json",
                 data: JSON.stringify(meta),  //还是POST String
                 success  :callback,

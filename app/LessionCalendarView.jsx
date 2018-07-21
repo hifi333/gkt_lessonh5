@@ -99,7 +99,7 @@ const LessionCalendarView = React.createClass({
 
             try {
                 let para = {
-                    eclassroom: back.eclassroom,
+                    eclassroom: back.roomid,
                     workmodel: back.workmodel
                 };
 
@@ -111,7 +111,7 @@ const LessionCalendarView = React.createClass({
                 }
          }else{
 
-            skillroom.joinRoom(back.eclassroom,back.workmodel);
+            skillroom.joinRoom(back.roomid,back.workmodel);
             console.log("skillroom.joinRoom: done");
 
          }
@@ -208,7 +208,7 @@ const LessionCalendarView = React.createClass({
                                                 <span>  {onelessoninfo.lessionname}  </span>
                                                 <span>  {displaylessiontime}  </span>
                                                 <span>  {onelessoninfo.teacheruserfullname}  </span>
-                                                <button  onClick={self.onClickShangKe.bind(self,onelessoninfo.lessionid)}>上课 </button>
+                                                <button className="shangkeaction"  onClick={self.onClickShangKe.bind(self,onelessoninfo.lessionid)}>上课 </button>
 
                                             </div>                              
                                             <div className="lessionsummary">

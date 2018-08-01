@@ -10,7 +10,7 @@ module.exports = {
     entry: __dirname + "/app/index.jsx", //已多次提及的唯一入口文件
     output: {
     path: __dirname + "/build",//打包后的文件存放的地方
-    filename: "lessionh5.js"//打包后输出文件的文件名
+    filename: "lessonh5.js"//打包后输出文件的文件名
   },
 module: {
     loaders: [{

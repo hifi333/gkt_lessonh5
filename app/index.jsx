@@ -8,7 +8,7 @@ export default function loginActivity_callwebviewjs_showLessionCalendarView(logi
   
    console.log("js:loginActivity_callwebviewjs_showLessionCalendarView called...ok with token:" + loginSessionToken);
 
-    ReactDOM.render(<LessionCalendarView loginSessionToken={loginSessionToken} />, document.getElementById('lessionh5'));
+    ReactDOM.render(<LessionCalendarView loginSessionToken={loginSessionToken} />, document.getElementById('lessonh5'));
 
 }
 
@@ -16,3 +16,4 @@ window.loginActivity_callwebviewjs_showLessionCalendarView = loginActivity_callw
 
 console.log("js:LessonH5-webview:loginActivity_callwebviewjs_showLessionCalendarView(): export ok");
 
+//loginActivity_callwebviewjs_showLessionCalendarView('S1391_tempsessiontoken_1533137222510');

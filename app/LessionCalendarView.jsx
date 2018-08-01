@@ -1,14 +1,27 @@
 
 import './LessionCalendarView.css';
 
-import React from 'react';
+import React, {Component} from "react";
 import ReactDOM from 'react-dom';
 import LessionCalendar from './LessionCalendar.jsx';
 import SamHttpClient from "./SamHttpClient.js"
 import H from './CanlendarUtilH.jsx';
 
 
-const LessionCalendarView = React.createClass({
+export default class LessionCalendarView extends Component {
+
+
+     constructor(props) {
+            super(props);
+
+            this.state = {
+                tags : [],
+                lessonlistFromServer: null
+
+            };
+
+
+        }
 
 
     componentDidMount() {
@@ -19,14 +32,16 @@ const LessionCalendarView = React.createClass({
         let {loginSessionToken} = this.props;
         SamHttpClient.loadLessonTable(loginSessionToken,this.loadLessonTablecallback);
 
-    },
+    }
 
     loadLessonTablecallback(result, status){
 
+
+        console.log('loadLessonTablecallback');
         let back = result; //JSON.parse(result);
         if(back.session)  //正常session
         {
-           console.log("loadlessontable result:" + result);
+           console.log(back);
 
             let currentyear = H.getFullYear();
             let currentmonth = H.getMonth()+1;
@@ -60,21 +75,9 @@ const LessionCalendarView = React.createClass({
    
 
         }
-    },
+    }
 
 
-    /**
-     * 初始状态
-     * @returns {{tags: number[]}}
-     */
-    getInitialState() {
-
-        return {
-            tags : []
-        }
-    },
-
-    
 
     
     onClickShangKe(lessonid,e){
@@ -84,7 +87,7 @@ const LessionCalendarView = React.createClass({
 
         SamHttpClient.joinClassroom(loginSessionToken, lessonid, action, this.joinClassroomcallback);
 
-    },
+    }
 
     joinClassroomcallback(result,status){
 
@@ -119,7 +122,7 @@ const LessionCalendarView = React.createClass({
         
         }
 
-    },
+    }
 
 
     onSelectDate(year, month, day) {
@@ -130,17 +133,16 @@ const LessionCalendarView = React.createClass({
         if(day<10) day1 = "0" + day;
 
         let aa = year + "-" + month1 + "-" + day1;
-        this.setState(
-            {
+        this.setState({
                 selectedDate: aa
             });
-    },
+    }
 
     onPreviousMonth(year, month) {
         console.log("当前日期为：" + year + '年' + month + '月');
         this.settags(year,month);
 
-    },
+    }
 
     
     onNextMonth(year, month) {
@@ -148,12 +150,12 @@ const LessionCalendarView = React.createClass({
   
         this.settags(year,month);
 
-    },
+    }
 
     settags(year,month){
 
         let newtags =[];
-        // this.setState({tags : [8, 23]});
+        // setState({tags : [8, 23]});
 
         if(this.state.lessonlistFromServer){
             this.state.lessonlistFromServer.map(function (onelessoninfo,index) {
@@ -168,7 +170,7 @@ const LessionCalendarView = React.createClass({
             });
             this.setState({tags : newtags});
     }
-    },
+    }
     
     render() {
 
@@ -183,9 +185,11 @@ const LessionCalendarView = React.createClass({
         return (
             <div className="lessionviewbody">  
                 <LessionCalendar
-                    onSelectDate={this.onSelectDate}
-                    onPreviousMonth={this.onPreviousMonth}
-                    onNextMonth={this.onNextMonth}
+                    onSelectDate={this.onSelectDate.bind(this)}
+                    onPreviousMonth={this.onPreviousMonth.bind(this)}
+                    onNextMonth={this.onNextMonth.bind(this)}
+                    row_number={6}
+                    col_number={7}  
                     // year="2018"
                     // month="7"
                     // day="3"
@@ -225,14 +229,14 @@ const LessionCalendarView = React.createClass({
 
                 </div> 
 
-
-
             </div>
         );
-    }
-});
+   }
 
-export default  LessionCalendarView;
+}
+
+
+//export default  LessionCalendarView;
 
 // ReactDOM.render(
 //     <LessionCalendarView />,

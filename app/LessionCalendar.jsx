@@ -1,40 +1,37 @@
 
-import React from 'react';
+import React, {Component} from "react";
 import H from './CanlendarUtilH.jsx';
 
-const LessionCalendar = React.createClass({
+export default class LessionCalendar extends Component {
 
-    /**
-     * 默认的属性
-     */
-    getDefaultProps() {
-        return {
-            row_number : 6,
-            col_number : 7
+
+
+     constructor(props) {
+            super(props);
+
+            this.state = {
+                current_year : H.getFullYear(),
+                current_month : H.getMonth(),
+                current_day : H.getDate(),
+                select_year : H.getFullYear(),
+                select_month : H.getMonth(),
+                select_day : H.getDate(),
+                history_year : undefined,
+                history_month : undefined,
+                history_day : undefined,
+                date_num_array : []
+      
+            };
+
+
         }
-    },
 
-    /**
-     * 组件初始化状态
-     */
-    getInitialState() {
-        return {
-            current_year : H.getFullYear(),
-            current_month : H.getMonth(),
-            current_day : H.getDate(),
-            select_year : H.getFullYear(),
-            select_month : H.getMonth(),
-            select_day : H.getDate(),
-            history_year : undefined,
-            history_month : undefined,
-            history_day : undefined,
-            date_num_array : []
-        }
-    },
 
+
+    
     componentWillReceiveProps(nextProps) {
         // todo
-    },
+    }
 
     /**
      * 组件渲染完后执行
@@ -55,7 +52,7 @@ const LessionCalendar = React.createClass({
                 first_day : first_day
             });
         }
-    },
+    }
 
     /**
      * 给月份数组附上每月天数
@@ -95,7 +92,7 @@ const LessionCalendar = React.createClass({
         }
 
         return _date_array;
-    },
+    }
 
     /**
      * 组件将要挂载
@@ -106,7 +103,7 @@ const LessionCalendar = React.createClass({
             first_day = H.weekOfMonth();
 
         this.setState({date_num_array : date_num_array, first_day : first_day});
-    },
+    }
 
     /**
      * 日期选择
@@ -122,7 +119,7 @@ const LessionCalendar = React.createClass({
         }, () => {
             this.props.onSelectDate(select_year, select_month + 1, s_day);
         });
-    },
+    }
 
     /**
      * 前一个月
@@ -157,7 +154,7 @@ const LessionCalendar = React.createClass({
         }, () => {
             this.props.onPreviousMonth(select_year, select_month + 1);
         })
-    },
+    }
 
     /**
      * 之后一个月
@@ -192,7 +189,7 @@ const LessionCalendar = React.createClass({
         }, () => {
             this.props.onNextMonth(select_year, select_month + 1);
         })
-    },
+    }
 
     /**
      * 渲染页面
@@ -292,9 +289,9 @@ const LessionCalendar = React.createClass({
         return (
             <div className="calendar">
                 <div className="calendar-header">
-                    <i className="icon-left" onClick={this.previousMonth}></i>
+                    <i className="icon-left" onClick={this.previousMonth.bind(this)}></i>
                     <span>{select_year} 年 {select_month + 1} 月</span>
-                    <i className="icon-right" onClick={this.nextMonth}></i>
+                    <i className="icon-right" onClick={this.nextMonth.bind(this)}></i>
                 </div>
                 <div className="calendar-body">
                     <ul className="c-body-head">
@@ -315,8 +312,8 @@ const LessionCalendar = React.createClass({
                     </div>
                 </div>
             </div>
-        );
-    }
-});
+        ); 
+  }
+}
 
-export default LessionCalendar;
+//export default LessionCalendar;

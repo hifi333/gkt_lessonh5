@@ -31,7 +31,7 @@ class SamHttpClient {
         $.ajax(
             {
                 type:'POST',
-                url : 'http://122.152.210.96/loadlessontable',
+                url : 'https://gkt6.com/loadlessontable',
                 contentType: "application/json",
                 data: JSON.stringify(meta),  //还是POST String
                 success  :callback,
@@ -61,7 +61,7 @@ class SamHttpClient {
         $.ajax(
             {
                 type:'POST',
-                url : 'http://122.152.210.96/joinclassroom',
+                url : 'https://gkt6.com/joinclassroom',
                 contentType: "application/json",
                 data: JSON.stringify(meta),  //还是POST String
                 success  :callback,
